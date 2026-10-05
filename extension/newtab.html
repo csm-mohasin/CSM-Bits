@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>CSM Bits</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="glass.css">
+<style>
+main{display:flex;flex-direction:column;align-items:center;gap:22px;padding:34px 20px 60px}
+.clock{padding:22px 56px;text-align:center}.clock h1{font-size:4.2rem;font-weight:300}
+.clock p{opacity:.85}#greet{font-size:1.05rem;margin-bottom:2px}
+.chip{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.14);font-size:.8rem;cursor:pointer}
+.search{width:min(640px,90vw);padding:6px;display:flex;align-items:center}
+.search input{flex:1;padding:15px 20px;background:transparent;border:0;outline:0;color:#fff;font-size:1.1rem;min-width:0}
+.search input::placeholder{color:rgba(255,255,255,.6)}
+.search select{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:14px;padding:9px 10px;margin-right:6px;outline:0;cursor:pointer}
+.search select option{color:#000}
+#links{display:flex;flex-wrap:wrap;justify-content:center;width:min(940px,94vw);gap:var(--lk-gap,18px)}
+.lk{display:flex;flex-direction:column;align-items:center;gap:7px;width:calc(var(--lk-size,64px) + 24px);cursor:pointer;position:relative;user-select:none;transition:transform .15s}
+.lk .ic{width:var(--lk-size,64px);height:var(--lk-size,64px);display:grid;place-items:center;background:rgba(255,255,255,var(--ga));backdrop-filter:blur(var(--gb)) saturate(170%);border:1px solid rgba(255,255,255,.3);box-shadow:0 6px 20px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.35);transition:.2s;overflow:hidden;font-size:calc(var(--lk-size,64px)*.42)}
+.lk:hover .ic{transform:translateY(-4px) scale(1.05);background:rgba(255,255,255,.25)}
+.lk .ic img{width:58%;height:58%;border-radius:20%;pointer-events:none}
+.lk .nm{font-size:.78rem;text-align:center;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.hide-nm .nm{display:none}
+.shape-rounded .ic{border-radius:24%}.shape-circle .ic{border-radius:50%}.shape-square .ic{border-radius:8px}
+.lk.dragging{opacity:.3}
+.lk.merge .ic{outline:3px solid var(--accent-l);transform:scale(1.14);background:rgba(255,255,255,.3)}
+.ic.fold{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:7px;align-content:center;font-size:.8rem}
+.ic.fold .mini{display:grid;place-items:center;overflow:hidden;border-radius:7px;background:rgba(255,255,255,.14);aspect-ratio:1}
+.ic.fold .mini img{width:78%;height:78%}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:min(940px,92vw)}
+.wg:empty{display:none}
+.card{padding:18px}.card h3{font-weight:500;margin-bottom:10px}
+.td{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:8px}
+.td:hover{background:rgba(255,255,255,.1)}
+.td span{flex:1;word-break:break-word}.td.done span{text-decoration:line-through;opacity:.5}
+.td b{opacity:.5;cursor:pointer;padding:0 6px;font-weight:400}.td b:hover{opacity:1;color:#ff9d9d}
+#tdl{max-height:170px;overflow:auto;margin-bottom:8px}
+#pm{font-size:3rem;font-weight:300;text-align:center;font-variant-numeric:tabular-nums}
+#pml{text-align:center;opacity:.75;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:min(940px,92vw)}
+.grid.one{grid-template-columns:1fr}
+.box{padding:20px;max-height:320px;overflow:auto}.box h3{margin-bottom:8px;font-weight:500}
+#tools{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:5}
+#tools button,#tools a{width:44px;height:44px;font-size:20px;color:#fff;cursor:pointer;border-radius:50%;display:grid;place-items:center}
+#panel{position:fixed;top:70px;right:16px;width:300px;padding:18px;display:none;z-index:10;max-height:84vh;overflow:auto}
+#panel.open{display:block}#panel h4{margin:12px 0 6px;font-weight:500}
+.presets{display:flex;flex-wrap:wrap;gap:8px}.presets span{width:38px;height:38px;border-radius:10px;cursor:pointer;border:2px solid rgba(255,255,255,.4)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;place-items:center;z-index:20}
+.modal.open{display:grid}.modal>.glass{width:min(420px,92vw);padding:22px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:8px;justify-content:flex-end}
+#fl{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:6px 0;max-height:50vh;overflow:auto}
+#ctx{position:fixed;display:none;z-index:30;padding:6px;min-width:190px}
+#ctx div{padding:8px 12px;border-radius:9px;cursor:pointer;font-size:.9rem}#ctx div:hover{background:rgba(255,255,255,.22)}
+
+body:not(.pf-off) main{padding-top:80px}
+#clockCard{display:none}body.pf-off #clockCard{display:block}body.pf-off .pf{display:none}
+.pf{--n1:#00eaff;--n2:#c084fc;position:relative;width:min(1040px,94vw);display:grid;grid-template-columns:auto 1fr auto;gap:36px;align-items:center;padding:34px 42px;overflow:hidden;border:1px solid rgba(0,234,255,.3);box-shadow:0 14px 48px rgba(0,0,0,.38),0 0 44px rgba(0,234,255,.14),inset 0 1px 0 rgba(255,255,255,.3);animation:pfIn .8s ease both}
+.pf.plain{--n1:var(--accent-l);--n2:var(--accent);border-color:rgba(255,255,255,.28);box-shadow:0 14px 48px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+.pf::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(560px 260px at 88% -12%,color-mix(in srgb,var(--n2) 30%,transparent),transparent 62%),radial-gradient(520px 260px at 4% 112%,color-mix(in srgb,var(--n1) 24%,transparent),transparent 62%)}
+.pf>*{position:relative}
+@keyframes pfIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.pf-photo{position:relative;width:208px;height:208px;display:grid;place-items:center}
+.pf-blob{width:100%;height:100%;position:relative;overflow:hidden;display:grid;place-items:center;border-radius:60% 40% 30% 70%/60% 30% 70% 40%;animation:pfMorph 12s ease-in-out infinite;background:linear-gradient(135deg,color-mix(in srgb,var(--n1) 35%,#0b1020),color-mix(in srgb,var(--n2) 40%,#0b1020));box-shadow:inset 0 0 0 6px rgba(255,255,255,.18),0 0 34px color-mix(in srgb,var(--n1) 55%,transparent),0 0 70px color-mix(in srgb,var(--n2) 40%,transparent);transition:transform .5s ease}
+.pf-photo:hover .pf-blob{transform:scale(1.06) rotate(3deg)}
+.pf-blob img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:cover;border-radius:inherit;user-select:none;-webkit-user-drag:none}
+.pf-blob span{font:700 2.6rem "Orbitron",system-ui,sans-serif;color:#fff;letter-spacing:.04em;text-shadow:0 0 18px var(--n1)}
+@keyframes pfMorph{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}25%{border-radius:40% 60% 70% 30%/30% 60% 40% 70%}50%{border-radius:30% 70% 40% 60%/70% 40% 60% 30%}75%{border-radius:70% 30% 60% 40%/40% 70% 30% 60%}}
+.pf-badge{display:flex;align-items:center;gap:10px;margin-bottom:10px;font:500 .72rem "DM Mono",ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--n1)}
+.pf-badge i{width:8px;height:8px;border-radius:50%;background:var(--n1);box-shadow:0 0 10px var(--n1);animation:pfPulse 2s ease-in-out infinite}
+.pf-badge b{width:26px;height:1px;background:var(--n1);opacity:.7}
+@keyframes pfPulse{50%{transform:scale(1.7);opacity:.6}}
+.pf-name{display:inline-block;font-family:"Orbitron","Segoe UI",system-ui,sans-serif;font-weight:700;font-size:clamp(1.35rem,2.5vw,2rem);line-height:1.15;letter-spacing:.02em;margin-bottom:10px;background:linear-gradient(90deg,var(--n1),var(--n2),var(--n1));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:pfFlow 9s linear infinite}
+@keyframes pfFlow{to{background-position:250% 0}}
+.pf-tw{display:flex;align-items:center;gap:8px;min-height:1.5em;font:400 .98rem "DM Mono",ui-monospace,monospace;margin-bottom:12px}
+.pf-tw span{color:var(--n1)}.pf-tw b{font-weight:500;color:#fff}
+.pf-tw i{width:2px;height:1.1em;background:var(--n1);animation:pfBlink .9s step-end infinite}
+@keyframes pfBlink{50%{opacity:0}}
+.pf-bio{font-size:.92rem;line-height:1.75;opacity:.88;max-width:520px;margin-bottom:14px}
+.pf-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.pf-chips span{padding:4px 12px;border-radius:20px;font:500 .72rem "DM Mono",ui-monospace,monospace;letter-spacing:.06em;color:#fff;background:rgba(255,255,255,.09);border:1px solid color-mix(in srgb,var(--n1) 45%,transparent);transition:.25s}
+.pf-chips span:hover{background:color-mix(in srgb,var(--n1) 22%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--n1) 45%,transparent);transform:translateY(-2px)}
+.pf-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pf-cta a{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;font-size:.85rem;font-weight:600;letter-spacing:.03em;transition:.25s}
+.pf-cta .pri{background:linear-gradient(135deg,var(--n1),var(--n2));color:#06091a}
+.pf-cta .pri:hover{transform:translateY(-2px);box-shadow:0 8px 26px color-mix(in srgb,var(--n1) 45%,transparent)}
+.pf-cta .gh{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);font-weight:500}
+.pf-cta .gh:hover{border-color:var(--n1);color:var(--n1);transform:translateY(-2px)}
+.pf-loc{font-size:.8rem;opacity:.8;margin-left:4px}
+.pf-clock{text-align:center;padding-left:34px;border-left:1px solid rgba(255,255,255,.2);min-width:210px}
+.pf-clock .g{font-size:.95rem;opacity:.9;margin-bottom:2px}
+.pf-clock h1{font-size:3.3rem;font-weight:300;font-variant-numeric:tabular-nums;line-height:1.1}
+.pf-clock p{opacity:.8;font-size:.88rem}
+@media(max-width:900px){.pf{grid-template-columns:1fr;text-align:center;padding:28px 22px;gap:22px}.pf-photo{margin:0 auto}.pf-badge,.pf-tw,.pf-chips,.pf-cta{justify-content:center}.pf-bio{margin-left:auto;margin-right:auto}.pf-clock{border-left:0;border-top:1px solid rgba(255,255,255,.2);padding:18px 0 0}}
+@media(prefers-reduced-motion:reduce){.pf,.pf-blob,.pf-name,.pf-badge i,.pf-tw i{animation:none}}
+
+/* ---- v5.1: verified badge, status, stats, effects ---- */
+.pf-nm{display:flex;align-items:center;flex-wrap:nowrap;gap:10px;margin-bottom:10px}
+.pf-nm .pf-name{margin:0;min-width:0}.pf-nm .pf-ver{align-self:center}
+.pf-ver{position:relative;width:26px;height:26px;flex:none;display:inline-block;cursor:help;filter:drop-shadow(0 0 8px rgba(40,150,255,.7));outline:0}
+.pf-ver::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.85) 50%,transparent 65%);background-size:250% 100%;background-position:150% 0;animation:pfShine 4.5s ease-in-out infinite;mix-blend-mode:overlay;pointer-events:none}
+@keyframes pfShine{0%,55%{background-position:150% 0}100%{background-position:-60% 0}}
+.pf-ver .tip{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) translateY(4px);white-space:nowrap;font:500 .72rem "DM Mono",ui-monospace,monospace;font-style:normal;letter-spacing:.06em;padding:6px 11px;border-radius:9px;color:#fff;background:rgba(10,14,34,.9);border:1px solid rgba(76,195,255,.5);opacity:0;pointer-events:none;transition:.2s;z-index:3}
+.pf-ver:hover .tip,.pf-ver:focus .tip{opacity:1;transform:translateX(-50%)}
+.pf-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:10px}.pf-top .pf-badge{margin:0}
+.pf-avail{display:inline-flex;align-items:center;gap:7px;padding:3px 11px 3px 9px;border-radius:20px;font-size:.7rem;font-weight:600;letter-spacing:.04em;color:#7dffb0;background:rgba(40,200,110,.12);border:1px solid rgba(60,220,130,.4)}
+.pf-avail i{position:relative;width:7px;height:7px;border-radius:50%;background:#4ade80}
+.pf-avail i::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:1.5px solid #4ade80;animation:pfPing 1.6s ease-out infinite}
+@keyframes pfPing{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(2.3)}}
+.pf-stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:2px;padding-top:20px;border-top:1px solid rgba(255,255,255,.16)}
+.pf-stats .st{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 8px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);transition:.25s}
+.pf-stats .st:hover{transform:translateY(-3px);border-color:var(--n1);background:color-mix(in srgb,var(--n1) 14%,transparent);box-shadow:0 8px 22px color-mix(in srgb,var(--n1) 25%,transparent)}
+.pf-stats b{font:700 1.45rem "Orbitron",system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#fff}
+.pf-stats small{font-size:.72rem;opacity:.7;letter-spacing:.04em}
+.pf-main>*{animation:pfIn .7s ease both}
+.pf-main>*:nth-child(1){animation-delay:.1s}.pf-main>*:nth-child(2){animation-delay:.18s}.pf-main>*:nth-child(3){animation-delay:.26s}.pf-main>*:nth-child(4){animation-delay:.34s}.pf-main>*:nth-child(5){animation-delay:.42s}.pf-main>*:nth-child(6){animation-delay:.5s}
+.pf-stats{animation:pfIn .8s ease .6s both}
+.pf-photo{transition:transform .18s ease-out;will-change:transform}
+.pf .spot,.aurora{display:none}
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+body.pf-fx .pf .spot{display:block;position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.14),transparent 62%)}
+body.pf-fx .pf:hover .spot{opacity:1}
+body.pf-fx .pf::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;background:conic-gradient(from var(--ang),transparent 0 62%,var(--n1) 78%,var(--n2) 90%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:pfSpin 7s linear infinite}
+@keyframes pfSpin{to{--ang:360deg}}
+body.pf-fx:not(.pf-off) .aurora{display:block;position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.aurora i{position:absolute;width:42vmax;height:42vmax;border-radius:50%;filter:blur(90px);opacity:.28;animation:pfDrift 26s ease-in-out infinite alternate}
+.aurora i:nth-child(1){background:#00eaff;top:-14vmax;left:-10vmax}
+.aurora i:nth-child(2){background:#c084fc;bottom:-16vmax;right:-8vmax;animation-delay:-9s}
+.aurora i:nth-child(3){background:#3b82f6;top:30%;left:40%;width:30vmax;height:30vmax;opacity:.16;animation-delay:-17s}
+@keyframes pfDrift{to{transform:translate(8vmax,6vmax) scale(1.18)}}
+@media(max-width:900px){.pf-stats{grid-template-columns:1fr 1fr}.pf-nm{justify-content:center}.pf-top{justify-content:center}}
+@media(prefers-reduced-motion:reduce){.pf-main>*,.pf-stats,.pf-ver::after,.pf-avail i::after,body.pf-fx .pf::after,.aurora i{animation:none}}
+
+.pf-edit{position:absolute;top:14px;right:14px;z-index:4;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:.95rem;color:#fff;cursor:pointer;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);opacity:.55;transition:.25s}
+.pf:hover .pf-edit,.pf-edit:focus{opacity:1}.pf-edit:hover{background:color-mix(in srgb,var(--n1) 30%,transparent);border-color:var(--n1);transform:rotate(-12deg) scale(1.08)}
+.modal>.glass.pfm{width:min(660px,94vw);max-height:92vh;overflow:auto;gap:12px}
+.pfm h3{font-weight:500;font-size:1.25rem}
+.pe-photo{display:flex;gap:16px;align-items:center}
+.pe-av{position:relative;width:88px;height:88px;flex:none;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#0e5a73,#5b3a8a);border:2px solid rgba(255,255,255,.35);box-shadow:0 0 22px rgba(0,234,255,.35)}
+.pe-av span{font:700 1.6rem "Orbitron",system-ui,sans-serif}
+.pe-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pe-ph-r{display:flex;flex-direction:column;gap:8px}.pe-ph-r small{opacity:.65;font-size:.76rem;line-height:1.5}
+.pe-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.pe-grid label{display:flex;flex-direction:column;gap:5px;font-size:.78rem;opacity:.95}.pe-grid .full{grid-column:1/-1}
+.pe-grid textarea{resize:vertical;font-family:inherit}
+.pe-checks{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:.85rem}.pe-checks label{display:flex;align-items:center;gap:7px;cursor:pointer}
+@media(max-width:560px){.pe-grid{grid-template-columns:1fr}.pe-photo{flex-direction:column;text-align:center}}
+.pf-stamp{position:absolute;right:16px;bottom:6px;font:400 10px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;opacity:.35;pointer-events:none}
+.pf-nm .pf-name{font-size:clamp(1.25rem,2.3vw,1.9rem)!important}
+
+.lay-hidden{display:none !important}
+body.lay-edit .lay-w{outline:2px dashed var(--accent-l);outline-offset:5px;user-select:none}
+.lay-ov{position:absolute;inset:0;z-index:60;cursor:grab;border-radius:inherit;background:rgba(120,115,245,.08);touch-action:none}
+.lay-ov.drag{cursor:grabbing;background:rgba(120,115,245,.2)}
+.lay-ov b{position:absolute;top:6px;left:8px;font-size:.7rem;font-weight:500;background:rgba(0,0,0,.6);padding:3px 9px;border-radius:9px;pointer-events:none}
+.lay-ov i{position:absolute;top:6px;right:8px;width:22px;height:22px;display:grid;place-items:center;background:rgba(0,0,0,.6);border-radius:50%;font-style:normal;font-size:.7rem;cursor:pointer}
+#layBar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:10px 14px;max-width:92vw;font-size:.82rem}
+.credit{margin-top:6px;font-size:.8rem;opacity:.65;text-align:center}.credit a{color:var(--accent-l);text-decoration:underline;text-underline-offset:3px}.credit a:hover{opacity:1}.credit:hover{opacity:1}
+</style><script src="lock.js"></script>
+</head>
+<body>
+<div id="tools">
+  <a class="glass" href="firebase.html" title="Firebase Sync Settings">🔥</a>
+  <a class="glass" href="hub.html#clip" title="Clipboard and Snapshots">📋</a>
+  <a class="glass" href="stats.html" title="Site Time Tracker">📊</a>
+  <a class="glass" href="tools.html" title="JSON Formatter">🧰</a>
+  <a class="glass" href="options.html" title="CSM Bits Studio">🎛</a>
+  <button id="layBtn" class="glass" title="Edit widget layout (drag &amp; drop)">✥</button> <button id="lockBtn" class="glass" title="Lock all tabs now (Alt+Shift+L)" style="display:none">🔒</button> <button id="gear" class="glass" title="Wallpaper">⚙</button>
+</div>
+<aside id="panel" class="glass">
+  <h3>Wallpaper</h3>
+  <h4>Preset</h4><div class="presets" id="presets"></div>
+  <h4>Your image, GIF or video</h4>
+  <input type="file" id="file" accept="image/*,video/mp4,video/webm,video/*,.gif" hidden>
+  <button class="btn" id="pick">📁 Upload image / GIF / video</button>
+  <h4>Image link</h4>
+  <input class="inp" type="text" id="url" placeholder="https://...jpg">
+  <button class="btn" id="setUrl" style="margin-top:6px">Set link</button>
+  <h4>Wallpaper blur: <span id="wbv"></span></h4><input type="range" id="wb" min="0" max="30">
+  <h4>Glass opacity: <span id="gav"></span></h4><input type="range" id="ga" min="2" max="50">
+  <h4>Glass blur: <span id="gbv"></span></h4><input type="range" id="gb" min="0" max="50">
+  <p style="margin-top:12px;opacity:.7;font-size:.8rem">Slideshow, History count and more settings are in 🎛 Studio.</p>
+</aside>
+<main>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <section class="glass pf" id="pf" aria-label="Profile">
+    <div class="spot"></div>
+    <button class="pf-edit" id="pfEdit" title="Edit profile" aria-label="Edit profile"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+    <div class="pf-stamp" id="pfStamp"></div>
+    <div class="pf-photo"><div class="pf-blob"><span id="pfInit">CM</span><img id="pfImg" alt="" referrerpolicy="no-referrer" draggable="false" hidden></div></div>
+    <div class="pf-main">
+      <div class="pf-top"><div class="pf-badge"><i></i><b></b><span id="pfRole"></span></div><div class="pf-avail" id="pfAvail"><i></i><span id="pfAvailTxt"></span></div></div>
+      <h2 class="pf-nm"><span class="pf-name" id="pfName"></span><span class="pf-ver" id="pfVer" tabindex="0" role="img" aria-label="Verified"><svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4cc3ff"/><stop offset="1" stop-color="#1673ff"/></linearGradient></defs><path fill="url(#vg)" d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91c-1.31.67-2.2 1.91-2.2 3.34s.89 2.67 2.2 3.34c-.46 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34z"/><path d="M7.7 12.4l3 3 5.7-6.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><em class="tip">✓ Verified profile</em></span></h2>
+      <div class="pf-tw"><span>I am a</span><b id="pfTw"></b><i></i></div>
+      <p class="pf-bio" id="pfBio"></p>
+      <div class="pf-chips" id="pfChips"></div>
+      <div class="pf-cta"><a class="pri" id="pfSite" target="_blank" rel="noopener">🌐 Portfolio</a><a class="gh" id="pfGit" target="_blank" rel="noopener">GitHub ↗</a><a class="gh" id="pfMail">✉ Email</a><a class="gh" id="pfCv" target="_blank" rel="noopener">⬇ CV</a><span class="pf-loc" id="pfLoc"></span></div>
+    </div>
+    <div class="pf-clock"><div class="g" id="pfGreet"></div><h1 id="pfTime"></h1><p id="pfDate"></p><a class="chip" id="pfToday" href="stats.html"></a></div>
+    <div class="pf-stats" id="pfStats">
+      <a class="st" href="stats.html"><b id="stT">0</b><small>Time today</small></a>
+      <a class="st" href="#todoBox"><b id="stK">0</b><small>Tasks left</small></a>
+      <a class="st" href="hub.html#clip"><b id="stC">0</b><small>Clipboard</small></a>
+      <a class="st" href="hub.html#snap"><b id="stS">0</b><small>Snapshots</small></a>
+    </div>
+  </section>
+  <div class="glass clock" id="clockCard"><div id="greet"></div><h1 id="time"></h1><p id="date"></p><a class="chip" id="today" href="stats.html"></a></div>
+  <form class="glass search" id="sf"><select id="eng"><option value="google">Google</option><option value="bing">Bing</option><option value="duck">DuckDuck</option><option value="youtube">YouTube</option><option value="github">GitHub</option></select><input id="q" placeholder="Search… (yt / gh / w / tr / maps + term, Ctrl+K = palette)" autofocus autocomplete="off"></form>
+  <div id="links"></div>
+  <div class="wg" id="wg">
+    <section class="glass card" id="todoBox"><h3>✅ To-do</h3><div id="tdl"></div><input class="inp" id="tdi" placeholder="Add a task and press Enter…"></section>
+    <section class="glass card" id="pomoBox"><h3>🍅 Pomodoro</h3><div id="pml"></div><div id="pm">25:00</div><div class="row" style="justify-content:center;margin-top:10px"><button class="btn pri" id="pgo">▶ Start</button><button class="btn" id="prs">↺</button><button class="btn" id="psk">⏭</button></div></section>
+  </div>
+  <div class="grid" id="lists">
+    <section class="glass box" id="bmBox"><h3>🔖 Bookmarks</h3><div id="bm"></div></section>
+    <section class="glass box" id="hsBox"><h3>🕘 History</h3><div id="hs"></div></section>
+  </div>
+<footer class="credit">Designed &amp; developed by <a href="https://mohasin.bro.bd" target="_blank" rel="noopener">Mohasin Alam</a></footer>
+</main>
+
+<div id="pemodal" class="modal"><div class="glass pfm">
+  <h3>✏ Edit Profile</h3>
+  <div class="pe-photo">
+    <div class="pe-av"><span id="peInit">CM</span><img id="peImg" alt="" hidden referrerpolicy="no-referrer"></div>
+    <div class="pe-ph-r">
+      <input type="file" id="peFile" accept="image/*" hidden>
+      <div class="row" style="justify-content:flex-start"><button class="btn" id="pePick" type="button">📁 Choose image from computer</button><button class="btn" id="peRm" type="button">🗑 Remove local image</button></div>
+      <small id="peNote">If you set a local image it is shown; if removed, the image from the link below is used.</small>
+    </div>
+  </div>
+  <div class="pe-grid">
+    <label class="full">Image link (https://…)<input class="inp" id="pPhoto" placeholder="https://example.com/me.jpg"></label>
+    <label>Name<input class="inp" id="pName"></label>
+    <label>Badge line (above name)<input class="inp" id="pRole"></label>
+    <label class="full">Typewriter roles (comma-separated)<input class="inp" id="pRoles"></label>
+    <label class="full">Bio / Intro<textarea class="inp" id="pBio" rows="4"></textarea></label>
+    <label>Location<input class="inp" id="pLoc"></label>
+    <label>Skills (comma-separated)<input class="inp" id="pSkills"></label>
+    <label>Portfolio Link<input class="inp" id="pSite" placeholder="https://"></label>
+    <label>GitHub Link<input class="inp" id="pGit" placeholder="https://github.com/…"></label>
+    <label>Email<input class="inp" id="pMail" placeholder="you@example.com"></label>
+    <label>CV Link<input class="inp" id="pCv" placeholder="https://"></label>
+    <label class="full">Status pill text<input class="inp" id="pAvTxt"></label>
+  </div>
+  <div class="pe-checks">
+    <label><input type="checkbox" id="pVer"> ✓ Verified Badge</label>
+    <label><input type="checkbox" id="pAv"> Status pill</label>
+    <label><input type="checkbox" id="pSt"> Stats strip</label>
+    <label><input type="checkbox" id="pFx"> Effects</label>
+    <label><input type="checkbox" id="pNeon"> Neon Theme</label>
+  </div>
+  <p id="peErr" style="color:#ff9d9d;font-size:.85rem;min-height:1.1em"></p>
+  <div class="row"><button class="btn" id="peReset" type="button" style="margin-right:auto">↺ Default</button><button class="btn" id="peCancel" type="button">Cancel</button><button class="btn pri" id="peSave" type="button">💾 Save</button></div>
+</div></div>
+<div id="ctx" class="glass"></div>
+<div id="modal" class="modal"><div class="glass">
+  <h3 id="mt">New link</h3>
+  <input class="inp" id="mName" placeholder="Name">
+  <input class="inp" id="mUrl" placeholder="https://example.com">
+  <input class="inp" id="mIcon" placeholder="Emoji icon (optional), e.g. 🎬">
+  <div class="row"><button class="btn" id="mCancel">Cancel</button><button class="btn pri" id="mSave">Save</button></div>
+</div></div>
+<div id="fmodal" class="modal"><div class="glass">
+  <input class="inp" id="fName" placeholder="Folder name">
+  <div id="fl"></div>
+  <p style="opacity:.6;font-size:.78rem;text-align:center">Right-click an item to take it out of the folder / edit it</p>
+  <div class="row"><button class="btn" id="fClose">Close</button></div>
+</div></div>
+<script src="settings.js"></script>
+<script src="apply.js"></script>
+<script src="fx.js"></script>
+<script src="palette.js"></script>
+<script src="bangla.js"></script>
+<script src="newtab.js"></script>
+<script src="layout.js"></script>
+<script src="profile.js"></script>
+</body></html>

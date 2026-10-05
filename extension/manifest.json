@@ -1,0 +1,94 @@
+{
+  "manifest_version": 3,
+  "name": "CSM Bits",
+  "version": "6.0.0",
+  "permissions": [
+    "alarms",
+    "bookmarks",
+    "clipboardWrite",
+    "favicon",
+    "history",
+    "idle",
+    "notifications",
+    "scripting",
+    "sidePanel",
+    "storage",
+    "tabGroups",
+    "tabs",
+    "unlimitedStorage",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "CSM Bits",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "_favicon/*",
+        "wall.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "lock.js",
+        "settings.js",
+        "content.js",
+        "fx.js",
+        "palette.js",
+        "bangla.js",
+        "tb.js",
+        "clip.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "commands": {
+    "take-snapshot": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Take page snapshot"
+    },
+    "lock-now": {
+      "suggested_key": {
+        "default": "Alt+Shift+L"
+      },
+      "description": "Lock all tabs now"
+    }
+  },
+  "description": "Glass-style New Tab and websites with a draggable widget layout, video/GIF wallpaper, Tab Lock, time tracker, and Bangla typing."
+}

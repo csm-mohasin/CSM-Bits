@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Site Time Tracker</title>
+<link rel="stylesheet" href="glass.css">
+<style>
+body{padding:30px 16px 80px}#wrap{max-width:900px;margin:0 auto}
+h1{font-weight:300;font-size:2rem;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tabs .btn.on{background:var(--accent);border-color:transparent}
+.card{padding:22px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{padding:16px;text-align:center}.kpi b{display:block;font-size:1.5rem;font-weight:500}.kpi span{font-size:.8rem;opacity:.7}
+.chart{display:flex;align-items:flex-end;gap:6px;height:180px;padding-top:10px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bar{width:100%;max-width:56px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,var(--accent-l),var(--accent));transition:.3s;min-height:2px}
+.col small{font-size:.68rem;opacity:.7;margin-top:6px;white-space:nowrap}
+.col em{font-size:.66rem;font-style:normal;opacity:.8;margin-bottom:3px}
+.site{display:grid;grid-template-columns:22px 150px 1fr 90px;gap:10px;align-items:center;margin:9px 0;font-size:.9rem}
+.site img{width:18px;height:18px;border-radius:4px}
+.site .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site .tr{height:10px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}
+.site .tr i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent-l))}
+.site .t{text-align:right;opacity:.85;font-size:.82rem}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.muted{opacity:.6;font-size:.8rem}
+</style></head>
+<body><div id="wrap">
+<h1>📊 Site Time Tracker</h1>
+<div class="tabs">
+ <button class="btn on" data-m="day">Today / Daily</button>
+ <button class="btn" data-m="week">Weekly</button>
+ <button class="btn" data-m="month">Monthly (30 days)</button>
+ <span style="flex:1"></span>
+ <button class="btn" id="csv">⬇ CSV</button>
+</div>
+<div class="row" id="dsel" style="margin-bottom:14px"><button class="btn sm" id="prev">◀</button><input type="date" class="inp" id="date" style="width:170px"><button class="btn sm" id="next">▶</button></div>
+<div class="kpis" id="kpis"></div>
+<div class="glass card" id="chartCard"><h3 style="font-weight:500;margin-bottom:8px" id="ct"></h3><div class="chart" id="chart"></div></div>
+<div class="glass card"><h3 style="font-weight:500;margin-bottom:8px">🏆 Top sites</h3><div id="sites"></div></div>
+<p class="muted">Data is stored only locally in your browser (nothing is sent over the internet). The last 120 days are kept.</p>
+</div>
+<script src="settings.js"></script>
+<script src="apply.js"></script>
+<script src="fx.js"></script>
+<script src="palette.js"></script>
+<script src="stats.js"></script>
+</body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>CSM Bits Screenshot</title>
+<link rel="stylesheet" href="glass.css">
+<style>
+body{padding:20px 16px 60px}#wrap{max-width:1200px;margin:0 auto}
+h1{font-weight:300;font-size:1.8rem;margin-bottom:14px}
+.ctrl{padding:16px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:16px}
+.ctrl label{font-size:.82rem;display:flex;flex-direction:column;gap:4px;min-width:120px}
+.ctrl label.c{flex-direction:row;align-items:center;gap:8px;min-width:0}
+#view{text-align:center}
+canvas{max-width:100%;height:auto;border-radius:10px;background:repeating-conic-gradient(#ffffff14 0 25%,#ffffff08 0 50%) 0 0/20px 20px}
+#st{margin:10px 0;opacity:.75}
+</style></head>
+<body><div id="wrap">
+<h1>📸 CSM Bits Screenshot</h1>
+<div class="glass ctrl">
+ <label>Background<select class="inp" id="bg"><option value="wall">Wallpaper (blur)</option><option value="accent">Accent gradient</option><option value="solid">Solid color</option><option value="none">Transparent</option></select></label>
+ <label>Solid color<input type="color" id="sc" value="#10143a"></label>
+ <label>Padding <input type="range" id="pad" min="0" max="160" value="56"></label>
+ <label>Rounded corners <input type="range" id="rad" min="0" max="48" value="18"></label>
+ <label>Shadow <input type="range" id="shd" min="0" max="80" value="40"></label>
+ <label class="c"><input type="checkbox" id="bar" checked> Browser bar</label>
+ <label class="c"><input type="checkbox" id="frm" checked> Glass Border</label>
+</div>
+<div class="row" style="display:flex;gap:10px;margin-bottom:12px">
+ <button class="btn pri" id="dl">⬇ PNG Download</button>
+ <button class="btn" id="cp">📋 Copy</button>
+ <button class="btn" id="retake">🔄 New screenshot</button>
+</div>
+<div id="st">Loading…</div>
+<div id="view"><canvas id="out"></canvas></div>
+</div>
+<script src="settings.js"></script>
+<script src="apply.js"></script>
+<script src="shot.js"></script>
+</body></html>

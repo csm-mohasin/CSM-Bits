@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>JSON Formatter</title>
+<link rel="stylesheet" href="glass.css">
+<style>
+body{padding:30px 16px 60px}#wrap{max-width:1100px;margin:0 auto}
+h1{font-weight:300;font-size:2rem;margin-bottom:16px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pane{padding:14px}.pane h3{font-weight:500;font-size:.9rem;margin-bottom:8px;opacity:.85}
+textarea.inp{height:62vh;resize:vertical;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;line-height:1.5;white-space:pre}
+#out{height:62vh;overflow:auto;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;line-height:1.5;white-space:pre-wrap;word-break:break-all}
+.k{color:#8fd3ff}.s{color:#b6f09c}.n{color:#ffcf86}.b{color:#ff9bd2}.z{color:#aaa}
+#msg{margin-top:10px;font-size:.88rem;min-height:1.2em}.ok{color:#8dffb0}.er{color:#ff9d9d}
+@media(max-width:800px){.cols{grid-template-columns:1fr}}
+</style></head>
+<body><div id="wrap">
+<h1>🧰 JSON Formatter</h1>
+<div class="bar">
+ <button class="btn pri" id="fmt">✨ Format</button>
+ <button class="btn" id="min">Minify</button>
+ <button class="btn" id="sort">A→Z Sort keys</button>
+ <select class="inp" id="ind" style="width:110px"><option value="2">2 spaces</option><option value="4">4 spaces</option><option value="t">Tab</option></select>
+ <button class="btn" id="paste">📋 Paste</button>
+ <button class="btn" id="copy">Copy Output</button>
+ <button class="btn" id="clr">Clear</button>
+</div>
+<div class="cols">
+ <div class="glass pane"><h3>Input</h3><textarea class="inp" id="inp" placeholder='{"name":"Csm","skills":["html","css"]}' spellcheck="false"></textarea></div>
+ <div class="glass pane"><h3>Output</h3><div id="out" class="inp"></div></div>
+</div>
+<div id="msg"></div>
+</div>
+<script src="settings.js"></script>
+<script src="apply.js"></script>
+<script src="fx.js"></script>
+<script src="palette.js"></script>
+<script src="tools.js"></script>
+</body></html>

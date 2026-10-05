@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>CSM Bits Hub</title>
+<link rel="stylesheet" href="glass.css">
+<style>
+body{padding:30px 16px 80px}
+#wrap{max-width:980px;margin:0 auto}
+h1{font-weight:300;font-size:2rem;margin-bottom:16px}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tabs .btn.on{background:var(--accent);border-color:transparent}
+.bar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.bar .inp{flex:1;min-width:200px}
+.cnt{opacity:.65;font-size:.85rem}
+.clip{padding:14px 16px;margin-bottom:10px;border-radius:18px}
+.clip pre{white-space:pre-wrap;word-break:break-word;font:inherit;line-height:1.55;max-height:150px;overflow:hidden;cursor:pointer}
+.clip.open pre{max-height:none}
+.meta{display:flex;gap:10px;align-items:center;margin-top:10px;font-size:.78rem;opacity:.75;flex-wrap:wrap}
+.meta .sp{flex:1}
+.meta a{text-decoration:underline;opacity:.85;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pin{color:#ffd27d}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.sc{border-radius:18px;overflow:hidden;cursor:pointer;transition:.18s}
+.sc:hover{transform:translateY(-3px)}
+.sc img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;border-bottom:1px solid rgba(255,255,255,.2)}
+.sc .t{padding:10px 12px}.sc .t b{display:block;font-weight:500;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc .t small{opacity:.65;font-size:.74rem}
+.modal{position:fixed;inset:0;background:rgba(5,8,25,.6);backdrop-filter:blur(8px);display:none;place-items:center;z-index:30;padding:20px}
+.modal.open{display:grid}
+.mb{width:min(860px,96vw);max-height:92vh;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:12px}
+.mb img{width:100%;border-radius:14px;border:1px solid rgba(255,255,255,.25)}
+.mb pre{white-space:pre-wrap;word-break:break-word;font:inherit;line-height:1.55;max-height:260px;overflow:auto;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);font-size:.88rem}
+.empty{opacity:.6;padding:30px;text-align:center}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 20px;display:none;z-index:40}
+</style></head>
+<body>
+<div id="toast" class="glass"></div>
+<div id="wrap">
+  <h1>🗂 CSM Bits Hub</h1>
+  <div class="tabs"><button class="btn on" id="tClip">📋 Clipboard History</button><button class="btn" id="tSnap">📸 Page Snapshots</button><a class="btn" href="options.html#fb">🔥 Sync Settings</a><span class="cnt" id="syncSt" style="align-self:center"></span></div>
+  <section id="pClip">
+    <div class="bar"><input class="inp" id="cq" placeholder="Search clipboard…"><span class="cnt" id="cc"></span><button class="btn" id="cClr">🗑 Clear all except pinned</button></div>
+    <div id="clist"></div>
+  </section>
+  <section id="pSnap" style="display:none">
+    <div class="bar"><input class="inp" id="sq" placeholder="Search snapshots (title, link, text)…"><span class="cnt" id="sc"></span><button class="btn pri" id="sNow">📸 Snapshot current tab</button></div>
+    <div class="sgrid" id="slist"></div>
+  </section>
+</div>
+<div class="modal" id="modal"><div class="glass mb" id="mb"></div></div>
+<script src="settings.js"></script>
+<script src="apply.js"></script>
+<script src="fx.js"></script>
+<script src="palette.js"></script>
+<script src="bangla.js"></script>
+<script src="hub.js"></script>
+</body></html>

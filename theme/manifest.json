@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "CSM Bits Theme",
+  "version": "1.0",
+  "theme": {
+    "images": { "theme_frame": "frame.png", "theme_ntp_background": "bg.png" },
+    "colors": {
+      "frame": [40,40,80], "toolbar": [70,70,130],
+      "tab_text": [255,255,255], "tab_background_text": [220,220,255],
+      "bookmark_text": [255,255,255], "ntp_text": [255,255,255]
+    },
+    "properties": { "ntp_background_alignment": "center" }
+  }
+}

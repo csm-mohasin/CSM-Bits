@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Firebase Sync</title>
+<link rel="stylesheet" href="glass.css">
+<style>
+body{padding:30px 16px 80px}#wrap{max-width:820px;margin:0 auto}
+h1{font-weight:300;font-size:2rem;margin-bottom:6px}.sub{opacity:.7;margin-bottom:22px}
+.sec{padding:22px}
+.f{display:grid;grid-template-columns:230px 1fr 60px;gap:12px;align-items:center;margin:10px 0}
+.f.chk{grid-template-columns:230px 1fr}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+textarea.inp{min-height:90px}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 20px;display:none;z-index:9}
+@media(max-width:640px){.f{grid-template-columns:1fr}}
+</style></head>
+<body>
+<div id="toast" class="glass"></div>
+<div id="wrap">
+  <h1>🔥 Firebase Sync <small id="ver" style="font-size:.9rem;opacity:.6"></small></h1>
+  <p class="sub">API key is all you need — all data is backed up automatically.</p>
+  <section class="glass sec" id="box"></section>
+</div>
+<script src="settings.js"></script>
+<script src="apply.js"></script>
+<script src="fx.js"></script>
+<script src="bangla.js"></script>
+<script src="firebase.js"></script>
+</body></html>
