@@ -26,6 +26,7 @@ Turn every new tab into a beautiful glass dashboard, and get a time tracker, pas
 - [What is CSM Bits?](#-what-is-csm-bits)
 - [Why It Exists](#-why-it-exists)
 - [Key Features](#-key-features)
+- [Screenshots](#-screenshots)
 - [Complete Feature List](#-complete-feature-list)
 - [How It Works](#-how-it-works)
 - [Installation](#-installation)
@@ -69,6 +70,65 @@ CSM Bits brings these tools together with one design language and one rule: **yo
 | ⏱ | **Time Tracker and Budget** | See where your time goes and set a limit per site |
 | 📋 | **Clipboard and Snapshots** | Searchable copy history and one-key page snapshots |
 | 🇧🇩 | **Bangla Phonetic Typing** | Type `ami` and get আমি in any text field |
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
+
+### 🏠 Home Page (New Tab)
+
+<table>
+  <tr>
+    <td align="center"><img src="resource/Screenshot%20(1).png" width="440" alt="Screenshot 1"></td>
+    <td align="center"><img src="resource/Screenshot%20(3).png" width="440" alt="Screenshot 3"></td>
+  </tr>
+</table>
+
+<sub>Glass profile card, clock, smart search, quick links and widgets over your own wallpaper.</sub>
+
+<br><br>
+
+### 🎛 CSM Bits Studio (Settings)
+
+<img src="resource/Screenshot%20(4).png" width="820" alt="Screenshot 4">
+
+<sub>Every feature has its own section and can be switched on or off instantly.</sub>
+
+<br><br>
+
+### ✅ To-do, 🔖 Bookmarks and 🕘 History
+
+<img src="resource/Screenshot%20(5).png" width="820" alt="Screenshot 5">
+
+<sub>Home page footer section with your tasks, recent bookmarks and browsing history.</sub>
+
+<br><br>
+
+### 📋 Clipboard History
+
+<img src="resource/Screenshot%20(6).png" width="820" alt="Screenshot 6">
+
+<sub>Searchable copy history with pinning, source links and one-click clear.</sub>
+
+<br><br>
+
+### 📊 Site Time Tracker
+
+<img src="resource/Screenshot%20(7).png" width="820" alt="Screenshot 7">
+
+<sub>Daily, weekly and monthly graphs showing how long you spend on each site.</sub>
+
+<br><br>
+
+### 🔒 Tab Lock
+
+<img src="resource/Screenshot%20(8).png" width="820" alt="Screenshot 8">
+
+<sub>The passcode screen that covers a locked tab.</sub>
+
+</div>
 
 ---
 
